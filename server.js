@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const { enforce } = require('express-sslify');
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
@@ -17,7 +16,16 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.use(enforce.HTTPS({ trustProtoHeader: true }));
+// Middleware para redirigir de HTTP a HTTPS
+function redirectToHTTPS(req, res, next) {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+  next();
+}
+
+app.use(redirectToHTTPS);
+
 
 app.use(
   helmet.contentSecurityPolicy({
