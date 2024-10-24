@@ -54,6 +54,12 @@ app.use(
 app.use(helmet.noSniff());
 app.use(helmet.referrerPolicy({ policy: "no-referrer-when-downgrade" }));
 
+app.use((req, res, next) => {
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
