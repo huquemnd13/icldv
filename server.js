@@ -26,7 +26,6 @@ function redirectToHTTPS(req, res, next) {
 
 app.use(redirectToHTTPS);
 
-
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
